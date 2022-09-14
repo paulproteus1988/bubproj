@@ -56,20 +56,17 @@ func userInput() string {
 
 // Writes string to file
 func writeFile(filePath string, input string) {
-	f, err := os.Create(filePath)
-
+	f, err := os.OpenFile("./files/sledger.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	defer f.Close()
 
-	data := []byte(input)
+	// data := []byte(input)
 
-	_, err2 := f.Write(data)
-
-	if err2 != nil {
-		log.Fatal(err2)
+	if _, err := f.WriteString(input + "\n\n"); err != nil {
+		log.Println(err)
 	}
 }
 
