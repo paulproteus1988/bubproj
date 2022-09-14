@@ -44,3 +44,7 @@
 	test                                    -503.44
 	test                                     503.44
 
+12-11-2010 Spencer's test 
+	general kenobi                          -4567.23
+	hello there                              4567.23
+
