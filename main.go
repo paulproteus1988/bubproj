@@ -10,11 +10,17 @@ import (
 	"time"
 )
 
+var ACCOUNT_PATH string = "./files/accounts.txt"
 var TRANSACTION_PATH string = "./files/sledger.txt"
 
 type Transaction struct {
 	date, name, category, account string
 	amount                        float64
+}
+
+type Account struct {
+	name, category	string
+	balance			float64
 }
 
 // Receive pointer to Transaction struct, prompt user for input for Transaction fields
@@ -78,6 +84,22 @@ func writeFile(filePath string, input string) {
 	}
 }
 
+func addAccount(a *Account) string {
+	a.category = "Credit"
+	a.name = "Amex"
+	a.balance = 0.00
+	return fmt.Sprintf("%s %s %40.2f", a.name, a.category, a.balance)
+}
+
+func printAccounts(filePath string) {
+	file, err := os.ReadFile(filePath)   
+	if err != nil {
+        fmt.Print(err)
+    }
+
+	fmt.Print(string(file))
+}
+
 // Main menu - Prompts user for keyboard input and triggers chosen function
 func mainMenu() {
 	fmt.Print("Enter command (Enter \"help\" for help): ")
@@ -87,10 +109,13 @@ func mainMenu() {
 		writeFile(TRANSACTION_PATH, addTransaction(&transaction))
 	case "areg":
 		fmt.Println("Show transactions in particular account")
-	case "accounts":
-		fmt.Println("Show accounts")
+	case "addaccount":
+		account := Account{}
+		writeFile(ACCOUNT_PATH, addAccount(&account))	
 	case "print":
 		printTransactions(TRANSACTION_PATH)
+	case "printaccounts":
+		printAccounts(ACCOUNT_PATH)
 	case "help":
 		fmt.Println("Help")
 	default:
