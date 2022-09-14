@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-var TRANSACTION_PATH string = "./files/transactionlog.txt"
+var TRANSACTION_PATH string = "./files/sledger.txt"
 
 type Transaction struct {
 	date, name, category, account string
@@ -54,16 +54,24 @@ func userInput() string {
 	return strings.TrimSpace(input)
 }
 
+// Prints transaction text file
+func printTransactions(filePath string) {
+	file, err := os.ReadFile(filePath)
+	if err != nil {
+        fmt.Print(err)
+    }
+
+	fmt.Print(string(file))
+}
+
 // Writes string to file
 func writeFile(filePath string, input string) {
-	f, err := os.OpenFile("./files/sledger.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Println(err)
 	}
 
 	defer f.Close()
-
-	// data := []byte(input)
 
 	if _, err := f.WriteString(input + "\n\n"); err != nil {
 		log.Println(err)
@@ -76,14 +84,13 @@ func mainMenu() {
 	switch input := userInput(); input {
 	case "add":
 		transaction := Transaction{}
-		transText := addTransaction(&transaction)
-		writeFile(TRANSACTION_PATH, transText)
+		writeFile(TRANSACTION_PATH, addTransaction(&transaction))
 	case "areg":
 		fmt.Println("Show transactions in particular account")
 	case "accounts":
 		fmt.Println("Show accounts")
 	case "print":
-		fmt.Println("Show transactions")
+		printTransactions(TRANSACTION_PATH)
 	case "help":
 		fmt.Println("Help")
 	default:
